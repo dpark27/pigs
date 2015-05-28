@@ -1,0 +1,100 @@
+Issues or Questions Contact: danny.park@ucsf.edu
+
+Note:  This document was updated January 17, 2014
+
+Versions:
+pigs_v1.py  
+
+DOCUMENTATION of PIGS software
+
+I.  Installing libraries needed to run PIGS
+
+PIGS is implemented as a python script and requires python version 2.6 or higher.  PIGS makes use of the python libraries NetworkX v1.8.1, NumPy v1.8, and SciPy v0.13.2, all of which have been included in the directory ./python_libraries.  The libraries can be installed by decompressing the library tar file you wish to install, changing to the decompressed directory, and issuing the command "python setup.py install".  Further documentation on installing python libraries can be found at http://docs.python.org/2/install/
+
+
+II.  Input
+
+As input PIGS expects the edges of a connected component in the form of Refined IBD output as shown in ./example/example_input.ibd and a list of sample IDs as shown in ./example/example_samples.txt.  The RefinedIBD output lists the edges of the graph and the sample IDs lists the nodes of the graph.  
+
+Refined IBD output is a tab-delimited text file with the following columns:
+    1.  Individual1 
+    2.  Individual1-Haplotype 
+    3.  Individual2 
+    4.  Indvidual2-Haplotype
+    5.  Chromosome
+    6.  Start Position
+    7.  End Position
+    8.  LOD Score
+
+The list of samples is just a text file with one sample ID per line.
+
+
+III.  Running PIGS
+
+PIGS can be run by issuing the command:
+    python <path_to_pigs>/pigs_v1.py -b <input_file> -m <tmp_dir> -l <sample_list>
+
+Listed below are options to allow the user to run his/her analysis as they see fit.  PIGS does create a temporary directory but deletes it after the analysis is finished.
+
+OPTIONS:
+    -h, --help                                          show this help message and exit
+    -b BGL_IBD_FILE, --bgl_ibd_file=BGL_IBD_FILE        Refined IBD output file, REQUIRED
+    -l LIST_OF_IDVS, --list_of_idvs=LIST_OF_IDVS        List of sample IDs, REQUIRED
+    -m TMP_DIR, --tmp_dir=TMP_DIR                       Temp directory to use, DEFAULT: ./
+    -o OUTPUT_FILE, --output_file=OUTPUT_FILE           Output file path, DEFAULT: pigs_output.txt
+    -p PRIOR_PROB, --prior_prob=PRIOR_PROB              Prior probability, DEFAULT: 0.004
+    -t LOD_THRESHOLD, --lod_threshold=LOD_THRESHOLD     Minimum LOD threshold for an edge to be added to graph, DEFAULT: 0.01
+    -s SAMPLING_TIME, --sampling_time=SAMPLING_TIME     Sampling time limit in seconds, DEFAULT: None
+
+
+IV.  Output
+
+PIGS outputs a tab-delimited text file of all edges in the graph.  The format is similar to the input but has 3 additional columns.  
+    1.  Individual1 
+    2.  Individual1-Haplotype 
+    3.  Individual2 
+    4.  Indvidual2-Haplotype
+    5.  Chromosome
+    6.  Start Position
+    7.  End Position
+    8.  LOD Score
+    9.  Probability before PIGS analysis
+    10. Probability after PIGS analysis
+    11. True/False indicating whether the edge was added by PIGS
+
+
+V.  Example
+
+As an example we will walk through some different ways or running PIGS using the files in ./example.
+
+If we wished to run PIGS on our data as is from ./ we would simply issue the command:
+    python pigs_v1.py -b example/example_input.ibd -l example/example_samples.txt -o example/regular_output.txt
+
+We could also specify a sampling time of 2 seconds:
+    python pigs_v1.py -b example/example_input.ibd -l example/example_samples.txt -o example/two_second_output.txt -s 2
+
+To change the prior probability:
+    python pigs_v1.py -b example/example_input.ibd -l example/example_samples.txt -o example/two_second_output.txt -p 0.005
+
+Or to change the LOD threshold for adding in edges:
+    python pigs_v1.py -b example/example_input.ibd -l example/example_samples.txt -o example/two_second_output.txt -t 1
+
+Or combining everything:
+    python pigs_v1.py -b example/example_input.ibd -l example/example_samples.txt -o example/two_second_output.txt -s 2 -t 1 -p 0.005
+
+
+Copyright 2014 Danny Park
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
